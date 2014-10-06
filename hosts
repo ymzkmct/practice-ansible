@@ -1,0 +1,7 @@
+[web]
+web
+
+[mysql]
+mysql-master
+mysql-slave
+

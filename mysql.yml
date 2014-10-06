@@ -1,0 +1,59 @@
+---
+- hosts: mysql
+  sudo: yes
+  tasks:
+    - name: install mysql
+      yum: name={{item}} state=latest
+      with_items:
+        - MySQL-python
+        - mysql-server
+        - libselinux-python
+    - name: start mysql and enabled
+      service: name=mysqld state=started enabled=yes
+    - name: Create the database users
+      mysql_user: name=test password=test priv=*.*:ALL state=present
+
+- hosts: mysql-master
+  sudo: yes
+  vars:
+    mysql_log_bin: "mysql-master-bin"
+    mysql_server_id: 30 
+  tasks:
+    - name: Create the replication users
+      mysql_user: name=repl host="%" password=test priv="*.*:REPLICATION SLAVE" state=present
+
+    - name: copy my.cnf
+      template: src=my.cnf.j2 dest=/etc/my.cnf
+      notify:
+        - restart mysql
+
+  handlers:
+    - name: restart mysql
+      service: name=mysqld state=restarted enabled=yes
+
+- hosts: mysql-slave
+  sudo: yes
+  vars:
+    mysql_log_bin: "mysql-slave-bin"
+    mysql_server_id: 31
+  tasks:
+    - name: copy my.cnf
+      template: src=my.cnf.j2 dest=/etc/my.cnf
+      notify:
+        - restart mysql
+
+    - name: Get the current master servers replication status
+      mysql_replication: mode=getmaster
+      delegate_to: "mysql-master"
+      register: repl_stat
+
+    - name: Change the master in slave to start the replication
+      mysql_replication: mode=changemaster master_host=192.168.43.30 master_user=repl master_password=test master_log_file={{ repl_stat.File }} master_log_pos={{ repl_stat.Position }}
+
+    - name: start slave
+      mysql_replication: mode=startslave
+
+  handlers:
+    - name: restart mysql
+      service: name=mysqld state=restarted enabled=yes
+
