@@ -1,9 +1,0 @@
-# file: servers for develop
-
-[webservers]
-web
-
-[mysqlservers]
-mysql-master
-mysql-slave
-

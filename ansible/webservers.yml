@@ -1,7 +1,7 @@
 ---
 # file: webservers.yml
 
-- hosts: webservers
+- hosts: web
   sudo: yes
   roles:
     - webservers
