@@ -1,0 +1,13 @@
+---
+# file: mysqlservers.yml
+
+- hosts: mysql-master
+  sudo: yes
+  roles:
+    - {role: mysqlservers, mysql_server_id: 30}
+
+- hosts: mysql-slave
+  sudo: yes
+  roles:
+    - {role: mysqlservers, mysql_server_id: 31, mysql_repl_role: "slave", mysql_repl_master: "192.168.43.30"}
+

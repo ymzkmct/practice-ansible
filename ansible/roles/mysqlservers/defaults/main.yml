@@ -1,0 +1,14 @@
+---
+
+mysql_users:
+  - name: hoge
+    pass: foobar
+    host: localhost
+    priv: "*.*:ALL"
+
+mysql_repl_user:
+  - name: repl
+    pass: repl
+
+mysql_repl_role: master
+

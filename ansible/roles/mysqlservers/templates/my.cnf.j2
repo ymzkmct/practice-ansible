@@ -5,9 +5,13 @@ user=mysql
 # Disabling symbolic-links is recommended to prevent assorted security risks
 symbolic-links=0
 
-log-bin   = {{ mysql_log_bin }}
+{% if mysql_repl_role == 'master' %}
+log-bin   = mysql-bin
+{% endif %}
+
 server-id = {{ mysql_server_id }}
 
 [mysqld_safe]
 log-error=/var/log/mysqld.log
 pid-file=/var/run/mysqld/mysqld.pid
+
