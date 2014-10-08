@@ -16,3 +16,6 @@
   notify:
     - restart apache
 
+- name: install git
+  yum: name=git state=latest
+
