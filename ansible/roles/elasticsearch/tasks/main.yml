@@ -1,0 +1,20 @@
+---
+
+- name: install packages
+  apt: name={{item}} state=present
+  with_items:
+    - wget
+    - default-jre
+
+- name: add apt key
+  apt_key: url=http://packages.elasticsearch.org/GPG-KEY-elasticsearch state=present
+
+- name: add sources.list 
+  shell: echo "deb http://packages.elasticsearch.org/elasticsearch/1.3/debian stable main" >> /etc/apt/sources.list
+
+- name: install Elasticsearch
+  apt: name=elasticsearch state=present update_cache=yes
+
+- name: start Elasticsearch
+  service: name=elasticsearch state=started enabled=yes
+

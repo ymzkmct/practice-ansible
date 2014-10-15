@@ -1,0 +1,7 @@
+---
+# file: elasticsearch.yml
+
+- hosts: elasticsearch
+  sudo: yes
+  roles:
+    - elasticsearch

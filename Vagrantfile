@@ -16,7 +16,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       ansible.playbook = "ansible/webservers.yml"
       ansible.limit = 'web'
     end
-
   end
 
   # mysql servers
@@ -39,6 +38,18 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       ansible.playbook = "ansible/mysqlservers.yml"
       ansible.limit = 'mysql-slave'
     end
+  end
+
+  # Elasticsearch
+  config.vm.define "elasticsearch" do |node|
+    node.vm.box = "ubuntu/trusty64"
+    node.vm.hostname = "elasticsearch"
+    node.vm.network :private_network, ip:"192.168.43.40"
+
+    node.vm.provision :ansible do |ansible|
+      ansible.playbook = "ansible/elasticsearch.yml"
+    end
+
   end
 
 end
