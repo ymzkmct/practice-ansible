@@ -49,7 +49,17 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     node.vm.provision :ansible do |ansible|
       ansible.playbook = "ansible/elasticsearch.yml"
     end
+  end
 
+  # MongoDB
+  config.vm.define "mongo" do |node|
+    node.vm.box = "ubuntu/trusty64"
+    node.vm.hostname = "mongo"
+    node.vm.network :private_network, ip:"192.168.43.50"
+
+    node.vm.provision :ansible do |ansible|
+      ansible.playbook = "ansible/mongo.yml"
+    end
   end
 
 end

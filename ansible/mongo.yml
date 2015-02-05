@@ -1,0 +1,7 @@
+---
+# file: mongo.yml
+
+- hosts: mongo
+  sudo: yes
+  roles:
+    - mongo
